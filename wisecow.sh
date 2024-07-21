@@ -12,5 +12,5 @@ while true; do
         echo "<html><body><pre>$(/usr/games/cowsay "$@")</pre></body></html>" > index.html
     fi
     # Serve the directory with a simple HTTPS server
-    python3 -m http.server 4499 --bind 0.0.0.0 --certfile /etc/tls/tls.crt --keyfile /etc/tls/tls.key
+    python3 -m http.server 4499 --bind 0.0.0.0 --certfile /etc/ssl/certs/wisecow.crt --keyfile /etc/ssl/private/wisecow.key
 done
