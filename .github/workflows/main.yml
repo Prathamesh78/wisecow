@@ -40,21 +40,6 @@ jobs:
       run: |
         echo "Host: ${{ secrets.KUBERNETES_HOST }}"
         echo "Username: ${{ secrets.KUBERNETES_USERNAME }}"
-    
-    - name: Convert private key to compatible format
-      run: |
-        echo "${{ secrets.KUBERNETES_PRIVATE_KEY }}" > wisecow.key
-        chmod 600 wisecow.key
-        ssh-keygen -p -m PEM -f wisecow.key -N ""
-        
-    - name: Copy kubernetesdeploy.yaml to remote server
-      uses: appleboy/scp-action@v0.1.1
-      with:
-        host: ${{ secrets.KUBERNETES_HOST }}
-        username: ${{ secrets.KUBERNETES_USERNAME }}
-        key: ${{ secrets.KUBERNETES_PRIVATE_KEY }}
-        source: "kubernetesdeploy.yaml"
-        target: "/home/prathamesh/kubernetesdeploy.yaml"
 
     - name: Deploy to Kubernetes
       uses: appleboy/ssh-action@v0.1.1
