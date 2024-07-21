@@ -40,6 +40,15 @@ jobs:
       run: |
         echo "Host: ${{ secrets.KUBERNETES_HOST }}"
         echo "Username: ${{ secrets.KUBERNETES_USERNAME }}"
+        
+    - name: Copy kubernetesdeploy.yaml to remote server
+      uses: appleboy/scp-action@v0.1.1
+      with:
+        host: ${{ secrets.KUBERNETES_HOST }}
+        username: ${{ secrets.KUBERNETES_USERNAME }}
+        key: ${{ secrets.KUBERNETES_PRIVATE_KEY }}
+        source: "kubernetesdeploy.yaml"
+        target: "/home/prathamesh/kubernetesdeploy.yaml"
 
     - name: Deploy to Kubernetes
       uses: appleboy/ssh-action@v0.1.1
