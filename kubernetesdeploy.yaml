@@ -20,11 +20,14 @@ spec:
         ports:
         - containerPort: 4499
         volumeMounts:
-        - name: tls-certificates
-          mountPath: "/etc/tls"
-          readOnly: true
+        - name: tls-secret
+          mountPath: /etc/ssl/certs
+          subPath: wisecow.crt
+        - name: tls-secret
+          mountPath: /etc/ssl/private
+          subPath: wisecow.key
       volumes:
-      - name: tls-certificates
+      - name: tls-secret
         secret:
           secretName: wisecow-tls
 ---
@@ -39,6 +42,6 @@ spec:
     app: wisecow-ps-app
   type: NodePort
   ports:
-  - nodePort: 31034    
+  - nodePort: 31034
     port: 4499
     targetPort: 4499
