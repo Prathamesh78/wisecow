@@ -39,6 +39,13 @@ jobs:
     - name: Push Docker image to Docker Hub
       run: docker push prathamesh78/wisecow:latest
 
+    - name: Convert ECDSA private key to PEM format
+      run: |
+        echo "${{ secrets.KUBERNETES_PRIVATE_KEY }}" > wisecow_ecdsa.key
+        chmod 600 wisecow_ecdsa.key
+        ssh-keygen -p -m PEM -f wisecow_ecdsa.key -N "" -C ""
+        mv wisecow_ecdsa.key wisecow.key
+
     - name: Copy kubernetesdeploy.yaml to remote server
       uses: appleboy/scp-action@v0.1.1
       with:
@@ -46,14 +53,14 @@ jobs:
         username: ${{ secrets.KUBERNETES_USERNAME }}
         source: "kubernetesdeploy.yaml"
         target: "/home/prathamesh/kubernetesdeploy.yaml"
-        key: ${{ secrets.KUBERNETES_PRIVATE_KEY }}
+        key: wisecow.key
 
     - name: Verify kubernetesdeploy.yaml on remote server
       uses: appleboy/ssh-action@v0.1.1
       with:
         host: ${{ secrets.KUBERNETES_HOST }}
         username: ${{ secrets.KUBERNETES_USERNAME }}
-        key: ${{ secrets.KUBERNETES_PRIVATE_KEY }}
+        key: wisecow.key
         script: |
           ls -l /home/prathamesh/kubernetesdeploy.yaml
 
@@ -62,7 +69,7 @@ jobs:
       with:
         host: ${{ secrets.KUBERNETES_HOST }}
         username: ${{ secrets.KUBERNETES_USERNAME }}
-        key: ${{ secrets.KUBERNETES_PRIVATE_KEY }}
+        key: wisecow.key
         script: |
           cd /home/prathamesh
           kubectl apply -f kubernetesdeploy.yaml
