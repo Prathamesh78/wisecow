@@ -36,6 +36,9 @@ jobs:
     - name: Push Docker image to Docker Hub
       run: docker push prathamesh78/wisecow:latest
 
+    - name: Convert private key to compatible format
+      run: ssh-keygen -p -m PEM -f /path/to/wisecow.key
+
     - name: Copy kubernetesdeploy.yaml to remote server
       uses: appleboy/scp-action@v0.1.1
       with:
