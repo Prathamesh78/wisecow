@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: wisecow-ps-deploy
+  name: wisecow-ps-deploy1
   labels:
     app: wisecow-ps-app
 spec:
