@@ -39,6 +39,9 @@ jobs:
     - name: Push Docker image to Docker Hub
       run: docker push prathamesh78/wisecow:latest
 
+    - name: Create tarball directory
+      run: mkdir -p /tmp/898604485
+
     - name: Archive Kubernetes deployment file
       run: tar -cvf /tmp/898604485/GQTs2Z5gAy.tar kubernetesdeploy.yaml
 
