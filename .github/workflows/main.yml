@@ -39,11 +39,20 @@ jobs:
     - name: Push Docker image to Docker Hub
       run: docker push prathamesh78/wisecow:latest
 
+    - name: List files before tar
+      run: ls -lah
+
     - name: Create tarball directory
-      run: mkdir -p /tmp/898604485
+      run: mkdir -p /tmp/826256582
 
     - name: Archive Kubernetes deployment file
-      run: tar -cvf /tmp/898604485/GQTs2Z5gAy.tar kubernetesdeploy.yaml
+      run: |
+        if [ -f kubernetesdeploy.yaml ]; then
+          tar -cvf /tmp/826256582/WFBvkrUuqL.tar kubernetesdeploy.yaml
+        else
+          echo "File kubernetesdeploy.yaml not found"
+          exit 1
+        fi
 
     - name: Set up SSH key
       uses: webfactory/ssh-agent@v0.5.3
@@ -56,8 +65,8 @@ jobs:
         host: ${{ secrets.KUBERNETES_HOST }}
         username: ${{ secrets.KUBERNETES_USERNAME }}
         key: ${{ secrets.KUBERNETES_PRIVATE_KEY }}
-        source: '/tmp/898604485/GQTs2Z5gAy.tar'
-        target: '~/GQTs2Z5gAy.tar'
+        source: '/tmp/826256582/WFBvkrUuqL.tar'
+        target: '~/WFBvkrUuqL.tar'
 
     - name: Deploy to Kubernetes
       uses: appleboy/ssh-action@v0.1.1
@@ -66,7 +75,7 @@ jobs:
         username: ${{ secrets.KUBERNETES_USERNAME }}
         key: ${{ secrets.KUBERNETES_PRIVATE_KEY }}
         script: |
-          tar -xvf ~/GQTs2Z5gAy.tar
+          tar -xvf ~/WFBvkrUuqL.tar
           kubectl apply -f kubernetesdeploy.yaml
-          rm ~/GQTs2Z5gAy.tar
+          rm ~/WFBvkrUuqL.tar
           rm kubernetesdeploy.yaml
